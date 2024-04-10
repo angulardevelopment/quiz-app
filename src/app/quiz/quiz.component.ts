@@ -8,7 +8,9 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent implements OnInit {
-  
+
+  constructor(private _http:HttpClient) { }
+
   quizes;
   quiz: Quiz;
   mode = 'quiz';
@@ -34,25 +36,23 @@ export class QuizComponent implements OnInit {
     count: 1
   };
 
-  constructor(private _http:HttpClient) { }
+  get filteredQuestions() {
+    return (this.quiz.questions) ?
+      this.quiz.questions.slice(this.pager.index, this.pager.index + this.pager.size) : [];
+  }
 
-  ngOnInit() {    
-    this.quizes = this.getAll();    
+  ngOnInit() {
+    this.quizes = this.getAll();
     this.quizName = this.quizes[0].id;
     this.loadQuiz(this.quizName);
   }
 
-  loadQuiz(quizName: string) {       
-    this.get(quizName).subscribe(res => {      
+  loadQuiz(quizName: string) {
+    this.get(quizName).subscribe(res => {
       this.quiz = new Quiz(res);
       this.pager.count = this.quiz.questions.length;
     });
     this.mode = 'quiz';
-  }
-
-  get filteredQuestions() {
-    return (this.quiz.questions) ?
-      this.quiz.questions.slice(this.pager.index, this.pager.index + this.pager.size) : [];
   }
 
   onSelect(question: Question, option: Option) {
@@ -98,12 +98,10 @@ export class QuizComponent implements OnInit {
 
 
   get(url: string) {
-    // return this._http.get(url).pipe(map(res => res['text']().length > 0 ? res['json']() : null))  
+    // return this._http.get(url).pipe(map(res => res['text']().length > 0 ? res['json']() : null))
     return this._http.get(url).pipe(map(res => {
       return res;
     }));
   }
-  //quiz service code ends here
-
 
 }
