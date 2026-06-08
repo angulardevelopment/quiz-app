@@ -22,6 +22,11 @@ I'm Sam, and I'm passionate about product engineering and web development. I cre
 ### About the app
 quiz app
 
+https://www.proprofs.com/quiz-school/ugc/story.php?title=ndi2ote5ngzl9h
+https://unstop.com/quiz/bitquiz-2025-chandigarh-university-up-campus-1599778? 
+https://unstop.com/competitions/nest-20-nurturing-excellence-strengthening-talent-novartis-1591009?  
+
+
 ### useful commands to run project
 
 ## Subscribe and Stay Updated!

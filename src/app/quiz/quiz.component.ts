@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Quiz, QuizConfig, Question, Option } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
 @Component({
-  selector: 'app-quiz',
-  templateUrl: './quiz.component.html',
-  styleUrls: ['./quiz.component.css']
+    selector: 'app-quiz',
+    templateUrl: './quiz.component.html',
+    styleUrls: ['./quiz.component.css'],
+    imports: [FormsModule],
+    standalone: true
 })
 export class QuizComponent implements OnInit {
+  private _http = inject(HttpClient);
 
-  constructor(private _http:HttpClient) { }
 
   quizes;
   quiz: Quiz;
@@ -41,16 +44,19 @@ export class QuizComponent implements OnInit {
       this.quiz.questions.slice(this.pager.index, this.pager.index + this.pager.size) : [];
   }
 
+  constructor(private  _cdr: ChangeDetectorRef) {}
   ngOnInit() {
     this.quizes = this.getAll();
     this.quizName = this.quizes[0].id;
     this.loadQuiz(this.quizName);
+
   }
 
   loadQuiz(quizName: string) {
     this.get(quizName).subscribe(res => {
       this.quiz = new Quiz(res);
       this.pager.count = this.quiz.questions.length;
+          this._cdr.markForCheck();
     });
     this.mode = 'quiz';
   }
@@ -79,9 +85,9 @@ export class QuizComponent implements OnInit {
   isCorrect(question: Question) {
     return question.options.every(x => x.selected === x.isAnswer) ? 'correct' : 'wrong';
   };
-
+ 
   onSubmit() {
-    let answers = [];
+    let answers: any = [];
     this.quiz.questions.forEach(x => answers.push({ 'quizId': this.quiz.id, 'questionId': x.id, 'answered': x.answered }));
 
     // Post your data to the server here. answers contains the questionId and the users' answer.
